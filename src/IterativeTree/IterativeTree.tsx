@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { IterativeNode } from './IterativeNode';
 import { Category } from './Category';
-
-const DEFAULT_NODE_NAME = 'Recursive node';
+import { DEFAULT_NODE_NAME } from '../constants';
 
 export interface IterativeTreeProps {}
 
@@ -20,18 +19,34 @@ export class IterativeTree extends React.PureComponent<
         this.state = {
             categories: [
                 {
-                    depth: 1,
+                    id: 1,
+                    depth: 0,
                     contents: DEFAULT_NODE_NAME
                 }
             ]
         };
     }
 
-    handleCategoryAdded = () => {
+    handleCategoryAdded = (targetCategoryId: number) => {
+        //TODO: find parent category, merge it to the list with slice & concat
+        //TODO: extract the merge to separate func
+        const targetCategoryIndex = this.state.categories.findIndex(
+            c => c.id === targetCategoryId
+        );
+        if (targetCategoryIndex < 0) {
+            return;
+        }
+
+        const targetCategory = this.state.categories[targetCategoryIndex];
+
         this.setState(prevState => ({
             categories: [
                 ...prevState.categories,
-                { depth: 1, contents: DEFAULT_NODE_NAME }
+                {
+                    id: prevState.categories.length + 1,
+                    depth: ++targetCategory.depth,
+                    contents: DEFAULT_NODE_NAME
+                }
             ]
         }));
     };
@@ -42,9 +57,10 @@ export class IterativeTree extends React.PureComponent<
                 {this.state.categories.map((category, i) => {
                     return (
                         <IterativeNode
-                            onCategoryAdded={this.handleCategoryAdded}
                             key={i}
-                            category={category}
+                            onCategoryAdded={this.handleCategoryAdded}
+                            id={category.id}
+                            depth={category.depth}
                         />
                     );
                 })}
@@ -52,3 +68,11 @@ export class IterativeTree extends React.PureComponent<
         );
     }
 }
+
+const createCategory = (id: number, baseDepth: number): Category => {
+    return {
+        id: ++id,
+        depth: ++baseDepth,
+        contents: DEFAULT_NODE_NAME
+    };
+};

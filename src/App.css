@@ -5,10 +5,6 @@
     align-items: center;
 }
 
-.tree-node {
-    padding-left: 25px;
-}
-
 .tree-node__control {
     padding-left: 15px;
     color: green;

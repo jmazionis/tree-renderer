@@ -1,18 +1,21 @@
 import * as React from 'react';
 import '../App.css';
 import { Category } from './Category';
+import {
+    DEFAULT_NODE_NAME,
+    DEFAULT_CATEGORY_LEVEL_OFFSET_PX
+} from '../constants';
 
 export interface IterativeNodeProps {
-    category: Category;
-    onCategoryAdded: () => void;
+    id: number;
+    depth: number;
+    onCategoryAdded: (categoryId: number) => void;
 }
 
 export interface IterativeNodeState {
     contents: string;
     isEditing: boolean;
 }
-
-const DEFAULT_NODE_NAME = 'Iterative node';
 
 export class IterativeNode extends React.PureComponent<
     IterativeNodeProps,
@@ -42,15 +45,19 @@ export class IterativeNode extends React.PureComponent<
     };
 
     handleAddClick = () => {
-        this.props.onCategoryAdded();
+        this.props.onCategoryAdded(this.props.id);
     };
 
     render() {
         const { isEditing, contents } = this.state;
-        const { category } = this.props;
+        const { id, depth } = this.props;
 
         return (
-            <div style={{ paddingLeft: `${25 * category.depth}` }}>
+            <div
+                style={{
+                    paddingLeft: `${DEFAULT_CATEGORY_LEVEL_OFFSET_PX * depth}`
+                }}
+            >
                 {isEditing ? (
                     <>
                         <input
@@ -77,17 +84,9 @@ export class IterativeNode extends React.PureComponent<
                     </>
                 )}
 
-                <a
-                    className="tree-node tree-node__control"
-                    onClick={this.handleAddClick}
-                >
+                <a className="tree-node__control" onClick={this.handleAddClick}>
                     Add new
                 </a>
-                {/* <div>
-                    {this.state.subNodes.map((_subNode, i) => {
-                        return <IterativeNode key={i} />;
-                    })}
-                </div> */}
             </div>
         );
     }

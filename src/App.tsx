@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { TreeNode } from './RecursiveTree/TreeNode';
+import { RecursiveTreeNode } from './RecursiveTree/RecursiveTreeNode';
 import { IterativeTree } from './IterativeTree/IterativeTree';
 
 class App extends Component {
@@ -9,7 +9,7 @@ class App extends Component {
             <div className="app">
                 <div>
                     <h3>Recursive tree</h3>
-                    <TreeNode />
+                    <RecursiveTreeNode />
                 </div>
                 <div>
                     <h3>Iterative tree</h3>

@@ -1,21 +1,23 @@
 import * as React from 'react';
 import '../App.css';
+import {
+    DEFAULT_NODE_NAME,
+    DEFAULT_CATEGORY_LEVEL_OFFSET_PX
+} from '../constants';
 
-export interface TreeNodeProps {}
+export interface RecursiveTreeNodeProps {}
 
-export interface TreeNodeState {
+export interface RecursiveTreeNodeState {
     isEditing: boolean;
     contents: string;
     subNodes: string[];
 }
 
-const DEFAULT_NODE_NAME = 'Recursive node';
-
-export class TreeNode extends React.PureComponent<
-    TreeNodeProps,
-    TreeNodeState
+export class RecursiveTreeNode extends React.PureComponent<
+    RecursiveTreeNodeProps,
+    RecursiveTreeNodeState
 > {
-    constructor(props: TreeNodeProps) {
+    constructor(props: RecursiveTreeNodeProps) {
         super(props);
 
         this.state = {
@@ -49,7 +51,7 @@ export class TreeNode extends React.PureComponent<
         const { contents, isEditing } = this.state;
 
         return (
-            <div className="tree-node">
+            <div style={{ paddingLeft: DEFAULT_CATEGORY_LEVEL_OFFSET_PX }}>
                 {isEditing ? (
                     <>
                         <input
@@ -76,15 +78,12 @@ export class TreeNode extends React.PureComponent<
                     </>
                 )}
 
-                <a
-                    className="tree-node tree-node__control"
-                    onClick={this.handleAddClick}
-                >
+                <a className="tree-node__control" onClick={this.handleAddClick}>
                     Add new
                 </a>
                 <div>
                     {this.state.subNodes.map((_subNode, i) => {
-                        return <TreeNode key={i} />;
+                        return <RecursiveTreeNode key={i} />;
                     })}
                 </div>
             </div>
