@@ -1,15 +1,15 @@
 import * as React from 'react';
 import '../App.css';
-import { Category } from './Category';
 import {
     DEFAULT_NODE_NAME,
     DEFAULT_CATEGORY_LEVEL_OFFSET_PX
 } from '../constants';
+import { generateId } from '../utils';
 
 export interface IterativeNodeProps {
-    id: number;
-    depth: number;
-    onCategoryAdded: (categoryId: number) => void;
+    id: string;
+    level: number;
+    onCategoryAdded: (categoryId: string) => void;
 }
 
 export interface IterativeNodeState {
@@ -50,12 +50,12 @@ export class IterativeNode extends React.PureComponent<
 
     render() {
         const { isEditing, contents } = this.state;
-        const { id, depth } = this.props;
+        const { id, level } = this.props;
 
         return (
             <div
                 style={{
-                    paddingLeft: `${DEFAULT_CATEGORY_LEVEL_OFFSET_PX * depth}`
+                    paddingLeft: DEFAULT_CATEGORY_LEVEL_OFFSET_PX * level
                 }}
             >
                 {isEditing ? (

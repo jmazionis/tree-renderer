@@ -1,5 +1,6 @@
 export interface Category {
-    id: number;
-    depth: number;
+    id: string;
+    lastAddedCategoryId?: string;
+    level: number;
     contents: string;
 }
