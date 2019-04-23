@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { IterativeNode } from './IterativeNode';
-import { Category } from './category';
 import { DEFAULT_NODE_NAME } from '../constants';
 import { generateId } from '../utils';
-import { create } from 'domain';
+
+interface Category {
+    id: string;
+    parentId?: string;
+    level: number;
+    contents: string;
+}
+
 
 export interface IterativeTreeProps {}
 
@@ -20,18 +26,18 @@ export class IterativeTree extends React.PureComponent<
 
         this.state = {
             categories: [
-                createChildCategory({
+                {
                     id: generateId(),
                     parentId: 'root',
-                    level: 0,
+                    level: 1,
                     contents: DEFAULT_NODE_NAME
-                })
+                }
             ]
         };
     }
 
     handleCategoryAdded = (targetCategoryId: string) => {
-        const lastChildCategoryIndex = getLastChildCategoryIndex(
+        const lastChildCategoryIndex = _getLastChildCategoryIndex(
             targetCategoryId,
             this.state.categories
         );
@@ -48,12 +54,12 @@ export class IterativeTree extends React.PureComponent<
         this.setState(prevState => ({
             categories: [
                 ...prevState.categories.slice(0, lastChildCategoryIndex + 1),
-                createChildCategory({
+                {
                     id: generateId(),
                     parentId: targetCategory.id,
-                    level: targetCategory.level,
+                    level: targetCategory.level + 1,
                     contents: DEFAULT_NODE_NAME
-                }),
+                },
                 ...prevState.categories.slice(lastChildCategoryIndex + 1)
             ]
         }));
@@ -77,18 +83,8 @@ export class IterativeTree extends React.PureComponent<
     }
 }
 
-const createChildCategory = (parentCategory: Category): Category => {
-    const { id, parentId, level, contents } = parentCategory;
-    return {
-        id,
-        parentId,
-        level: level + 1,
-        contents
-    };
-};
-
 // retrieves the index of a node in the list to witch the new one will be appended
-const getLastChildCategoryIndex = (
+const _getLastChildCategoryIndex = (
     targetParentId: string,
     categories: Category[]
 ): number => {
