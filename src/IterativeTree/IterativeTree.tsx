@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { IterativeNode } from './IterativeNode';
-import { Category } from './Category';
+import { Category } from './category';
 import { DEFAULT_NODE_NAME } from '../constants';
 import { generateId } from '../utils';
+import { create } from 'domain';
 
 export interface IterativeTreeProps {}
 
@@ -19,22 +20,26 @@ export class IterativeTree extends React.PureComponent<
 
         this.state = {
             categories: [
-                {
+                createChildCategory({
                     id: generateId(),
+                    parentId: 'root',
                     level: 0,
                     contents: DEFAULT_NODE_NAME
-                }
+                })
             ]
         };
     }
 
     handleCategoryAdded = (targetCategoryId: string) => {
-        //TODO: find parent category, merge it to the list with slice & concat
-        //TODO: extract the merge to separate func
+        const lastChildCategoryIndex = getLastChildCategoryIndex(
+            targetCategoryId,
+            this.state.categories
+        );
         const targetCategoryIndex = this.state.categories.findIndex(
             c => c.id === targetCategoryId
         );
-        if (targetCategoryIndex < 0) {
+
+        if (lastChildCategoryIndex < 0 || targetCategoryIndex < 0) {
             return;
         }
 
@@ -42,12 +47,14 @@ export class IterativeTree extends React.PureComponent<
 
         this.setState(prevState => ({
             categories: [
-                ...prevState.categories,
-                {
+                ...prevState.categories.slice(0, lastChildCategoryIndex + 1),
+                createChildCategory({
                     id: generateId(),
-                    level: ++targetCategory.level,
+                    parentId: targetCategory.id,
+                    level: targetCategory.level,
                     contents: DEFAULT_NODE_NAME
-                }
+                }),
+                ...prevState.categories.slice(lastChildCategoryIndex + 1)
             ]
         }));
     };
@@ -59,8 +66,8 @@ export class IterativeTree extends React.PureComponent<
                     return (
                         <IterativeNode
                             key={category.id}
-                            onCategoryAdded={this.handleCategoryAdded}
                             id={category.id}
+                            onCategoryAdded={this.handleCategoryAdded}
                             level={category.level}
                         />
                     );
@@ -70,10 +77,28 @@ export class IterativeTree extends React.PureComponent<
     }
 }
 
-const createChildCategory = (id: string, baseLevel: number): Category => {
+const createChildCategory = (parentCategory: Category): Category => {
+    const { id, parentId, level, contents } = parentCategory;
     return {
         id,
-        level: ++baseLevel,
-        contents: DEFAULT_NODE_NAME
+        parentId,
+        level: level + 1,
+        contents
     };
+};
+
+// retrieves the index of a node in the list to witch the new one will be appended
+const getLastChildCategoryIndex = (
+    targetParentId: string,
+    categories: Category[]
+): number => {
+    for (let i = categories.length - 1; i >= 0; i--) {
+        if (
+            categories[i].parentId === targetParentId ||
+            categories[i].id === targetParentId
+        ) {
+            return i;
+        }
+    }
+    return -1;
 };

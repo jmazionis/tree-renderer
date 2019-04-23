@@ -4,7 +4,6 @@ import {
     DEFAULT_NODE_NAME,
     DEFAULT_CATEGORY_LEVEL_OFFSET_PX
 } from '../constants';
-import { generateId } from '../utils';
 
 export interface IterativeNodeProps {
     id: string;

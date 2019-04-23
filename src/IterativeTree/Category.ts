@@ -1,6 +1,6 @@
 export interface Category {
     id: string;
-    lastAddedCategoryId?: string;
+    parentId?: string;
     level: number;
     contents: string;
 }
