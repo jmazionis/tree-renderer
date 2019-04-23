@@ -49,7 +49,7 @@ export class IterativeNode extends React.PureComponent<
 
     render() {
         const { isEditing, contents } = this.state;
-        const { id, level } = this.props;
+        const { level } = this.props;
 
         return (
             <div
