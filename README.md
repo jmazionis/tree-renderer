@@ -1,4 +1,4 @@
-Tree-like component renderer in both recursive and iterative modes.
+**React based tree-like component rendering in both recursive and iterative modes.**
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
